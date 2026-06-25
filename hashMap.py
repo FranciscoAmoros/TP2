@@ -51,13 +51,3 @@ class HashMap:
         for i in range(self.tamaño):
             print(f"Bucket {i}: {self.buckets[i]}")
 
-hashmap = HashMap()
-hashmap.agregar(1, "Pikachu")
-hashmap.agregar(11, "Charmander")
-hashmap.agregar(21, "Bulbasaur")
-hashmap.mostrar()
-print("\nBuscar key 11:", hashmap.buscar(11))
-hashmap.modificar(11, "Charizard")
-print("Buscar key 11:", hashmap.buscar(11))
-hashmap.eliminar(21)
-hashmap.mostrar()

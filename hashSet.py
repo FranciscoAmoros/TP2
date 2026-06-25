@@ -36,13 +36,3 @@ class HashSet:
         for i in range(self.tamaño):
             print(f"Bucket {i}: {self.buckets[i]}")
 
-hashset = HashSet()
-hashset.agregar(30)
-hashset.agregar(15)
-hashset.agregar(40)
-hashset.agregar(30) 
-hashset.mostrar()
-print("\nBuscar 25:", hashset.buscar(25))
-print("Buscar 50:", hashset.buscar(50))
-hashset.eliminar(25)
-hashset.mostrar()
