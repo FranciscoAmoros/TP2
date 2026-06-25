@@ -94,7 +94,7 @@ class LinkedList:
 
         elemento_actual = self.head
 
-        while elemento_actual.next:
+        while elemento_actual:
             print(elemento_actual.data)
             elemento_actual = elemento_actual.next
 

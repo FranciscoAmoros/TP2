@@ -25,5 +25,5 @@
     {"id": 24, "nombre": "Magneton", "tipo": "Eléctrico", "cp": 500},
     {"id": 25, "nombre": "Jolteon", "tipo": "Eléctrico", "cp": 560},
     {"id": 26, "nombre": "Vaporeon", "tipo": "Agua", "cp": 565},
-    {"id": 27, "nombre": "Flareon", "tipo": "Fuego", "cp": 560}
+    {"id": 0, "nombre": "Flareon", "tipo": "Fuego", "cp": 560}
 ]

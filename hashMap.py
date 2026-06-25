@@ -1,5 +1,5 @@
 class HashMap:
-    def init(self, tamaño=10):
+    def __init__(self, tamaño=10):
         self.tamaño = tamaño
         self.buckets = []
         for i in range(tamaño):
@@ -48,6 +48,13 @@ class HashMap:
 
     def mostrar(self):
         print("\n=== HASH MAP ===")
-        for i in range(self.tamaño):
-            print(f"Bucket {i}: {self.buckets[i]}")
 
+        for i in range(self.tamaño):
+
+            for key, pokemon in self.buckets[i]:
+                print(
+                    f"  ID: {key} | "
+                    f"Nombre: {pokemon.nombre} | "
+                    f"Tipo: {pokemon.tipo} | "
+                    f"CP: {pokemon.PC}"
+                )

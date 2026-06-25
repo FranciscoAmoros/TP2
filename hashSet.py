@@ -1,5 +1,7 @@
+import json
+
 class HashSet:
-    def init(self, tamaño=10):
+    def __init__(self, tamaño=10):
         self.tamaño = tamaño
         self.buckets = []
         for i in range(tamaño):
@@ -32,7 +34,11 @@ class HashSet:
         return key in bucket
 
     def mostrar(self):
-        print("\nHASH SET:")
-        for i in range(self.tamaño):
-            print(f"Bucket {i}: {self.buckets[i]}")
+
+        with open("medallas.json", "r", encoding="utf-8") as archivo:
+            medallas_json = json.load(archivo)
+
+        for medalla in medallas_json:
+            if self.buscar(medalla["id"]):
+                print(f"{medalla["id"]}: {medalla["nombre"]}")
 
