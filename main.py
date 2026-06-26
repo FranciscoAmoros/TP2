@@ -4,6 +4,8 @@ import hashSet as hs
 
 from clasePokemon import Pokemon
 
+import profesoroak as profe
+
 import json
 
 import os
@@ -58,9 +60,13 @@ PC = LinkedList()
 
 def verPC():
 
+    os.system("cls")
+
     PC.imprimir()
 
 def verEquipo():
+
+    os.system("cls")
 
     global equipo
 
@@ -81,10 +87,80 @@ def verMedallas():
 
     medallas.mostrar()
 
+def transferirPokemon():
+    
+    os.system("cls")
+
+    global equipo, PC
+
+    if PC.is_empty():
+        print("No hay Pokémon en el equipo para transferir.")
+        return
+
+    print("elija el pokémon que desea transferir al Profesor Oak (ingrese el número correspondiente):")
+    PC.imprimir()
+
+    try:
+        opcion = int(input("\nINGRESE OPCIÓN: \n"))
+    except ValueError:
+        print("solo se pueden inresar números.")
+    else:
+        if opcion < 0 or opcion >= PC.size():
+            print("opción no válida.")
+        else:
+            elemento_actual = PC.head
+            for i in range(opcion):
+                elemento_actual = elemento_actual.next
+
+            pokemon_a_transferir = elemento_actual.data
+
+            PC.remove(pokemon_a_transferir)
+            profe.transferir(pokemon_a_transferir)
+
+            print(f"{pokemon_a_transferir.nombre} ha sido transferido al Profesor Oak.")
+
+def deshacerTransferencia():
+    
+    os.system("cls")
+
+    global equipo, PC
+
+    pokemon_recuperado = profe.deshacerTransferencia()
+
+    if pokemon_recuperado == "Stack is empty":
+        print("No hay transferencias para deshacer.")
+    else:
+        PC.insert(pokemon_recuperado, 0)
+        print(f"{pokemon_recuperado.nombre} ha sido recuperado del Profesor Oak y agregado a la pc.")
+
+def capturarPokemon():
+    
+    os.system("cls")
+
+    global equipo, PC
+
+    print("Ingrese el ID del Pokémon que desea capturar:")
+    try:
+        id_pokemon = int(input("\nINGRESE ID: \n"))
+    except ValueError:
+        print("solo se pueden inresar números.")
+    else:
+        pokemon = base_de_datos.buscar(id_pokemon)
+
+        if pokemon is None:
+            print("No se encontró un Pokémon con ese ID.")
+        else:
+            if len(equipo) < 6:
+                equipo.append(pokemon)
+                print(f"{pokemon.nombre} ha sido agregado a tu equipo.")
+            else:
+                PC.insert(pokemon, 0)
+                print(f"Tu equipo está lleno. {pokemon.nombre} ha sido enviado a la PC.")
 
 def main():
 
     precargar()
+    profe.main()
 
     running = True
     on_menu = True
@@ -135,6 +211,12 @@ def menu():
         verPC()
     elif opcion == 4:
         verMedallas()
+    elif opcion == 5:
+        capturarPokemon()
+    elif opcion == 9:
+        transferirPokemon()
+    elif opcion == 10:
+        deshacerTransferencia()
 
     print('\nPRESIONE LA TECLA "ESCAPE" PARA VOLVER AL MENÚ.\n')
 

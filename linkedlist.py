@@ -185,3 +185,13 @@ class LinkedList:
                 return True
 
         return False
+    
+    def imprimir(self):
+
+        elemento_actual = self.headcc
+        contador = 1
+
+        while elemento_actual:
+            print(f"{contador}. {elemento_actual.data}")
+            elemento_actual = elemento_actual.next
+            contador += 1
