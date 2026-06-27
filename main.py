@@ -12,6 +12,7 @@ import os
 import keyboard
 
 import random
+import time
 
 base_de_datos : hm.HashMap
 medallas : hs.HashSet
@@ -71,7 +72,7 @@ def verEquipo():
     global equipo
 
     for pokemon in equipo:
-        print(pokemon["nombre"], pokemon["tipo"], pokemon["cp"])
+        print(pokemon.nombre, pokemon.tipo, pokemon.PC)
 
 
 def verPokedex():
@@ -94,7 +95,7 @@ def transferirPokemon():
     global equipo, PC
 
     if PC.is_empty():
-        print("No hay Pokémon en el equipo para transferir.")
+        print("No hay Pokémon en la PC para transferir.")
         return
 
     print("elija el pokémon que desea transferir al Profesor Oak (ingrese el número correspondiente):")
@@ -105,16 +106,16 @@ def transferirPokemon():
     except ValueError:
         print("solo se pueden inresar números.")
     else:
-        if opcion < 0 or opcion >= PC.size():
+        if opcion <= 0 or opcion > PC.size():
             print("opción no válida.")
         else:
             elemento_actual = PC.head
-            for i in range(opcion):
+            for i in range(opcion-1):
                 elemento_actual = elemento_actual.next
 
             pokemon_a_transferir = elemento_actual.data
 
-            PC.remove(pokemon_a_transferir)
+            PC.delete(pokemon_a_transferir)
             profe.transferir(pokemon_a_transferir)
 
             print(f"{pokemon_a_transferir.nombre} ha sido transferido al Profesor Oak.")
@@ -139,23 +140,57 @@ def capturarPokemon():
 
     global equipo, PC
 
-    print("Ingrese el ID del Pokémon que desea capturar:")
-    try:
-        id_pokemon = int(input("\nINGRESE ID: \n"))
-    except ValueError:
-        print("solo se pueden inresar números.")
-    else:
-        pokemon = base_de_datos.buscar(id_pokemon)
+    print()
+    print("¡Un Pokemon salvaje apareció!")
+    print()
 
-        if pokemon is None:
-            print("No se encontró un Pokémon con ese ID.")
+    salvaje = base_de_datos.obtenerPokemonRandom()[1]
+
+    print(f"  ¡Es un {salvaje.nombre}! ({salvaje.tipo}) | PC: {salvaje.PC}")
+    print()
+
+    intentar = input("¿Querés intentar atraparlo? (s/n): ").strip().lower()
+
+    if intentar != "s":
+        print("\nDejaste escapar al Pokemon...")
+        return
+    
+    ids_equipo = []
+
+    for pokemon_equipo in equipo:
+        ids_equipo.append(pokemon_equipo.id)
+
+
+    ids_pc = PC.obtener_ids()
+
+
+    if salvaje.id in ids_equipo or salvaje.id in ids_pc:
+        print(f"\nYa tenés un {salvaje.nombre} en tu equipo o PC.")
+        return
+
+    # 65% de probabilidad de captura
+    print("\nTirando la Pokeball...", end="", flush=True)
+    """
+    time.sleep(1)
+    print(" .", end="", flush=True)
+    time.sleep(0.6)
+    print(" .", end="", flush=True)
+    time.sleep(0.6)
+    print(" .")
+    time.sleep(0.6)
+    """
+
+    if random.random() < 0.90:
+        nuevo = Pokemon(salvaje.id, salvaje.nombre, salvaje.tipo, salvaje.PC)
+        if len(equipo) < 6:
+            equipo.append(nuevo)
+            print(f"\n¡Atrapaste a {nuevo.nombre}! Fue añadido al equipo ({len(equipo)}/6)")
         else:
-            if len(equipo) < 6:
-                equipo.append(pokemon)
-                print(f"{pokemon.nombre} ha sido agregado a tu equipo.")
-            else:
-                PC.insert(pokemon, 0)
-                print(f"Tu equipo está lleno. {pokemon.nombre} ha sido enviado a la PC.")
+            PC.append(nuevo)
+            print(f"\n¡Atrapaste a {nuevo.nombre}! Equipo lleno, fue enviado a la PC")
+    else:
+        print(f"\n¡{salvaje.nombre} escapó! Más suerte la próxima.")
+
 
 def main():
 
@@ -224,4 +259,5 @@ def menu():
         
 
 main()
+
 

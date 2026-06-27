@@ -1,3 +1,5 @@
+import random
+
 class HashMap:
     def __init__(self, tamaño=10):
         self.tamaño = tamaño
@@ -58,3 +60,17 @@ class HashMap:
                     f"Tipo: {pokemon.tipo} | "
                     f"CP: {pokemon.PC}"
                 )
+            
+    def obtenerPokemonRandom(self): # (si no hay pokemones precargados en la pokedex se queda el loop infinito)
+
+        done = False
+        while not done:
+
+            bucket = self.buckets[random.randint(0, 9)]
+
+            if len(bucket) > 0:
+                pokemon = bucket[random.randint(0, len(bucket)-1)]
+                done = True
+
+        return pokemon
+    

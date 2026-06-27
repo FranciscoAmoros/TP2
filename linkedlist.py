@@ -188,10 +188,24 @@ class LinkedList:
     
     def imprimir(self):
 
-        elemento_actual = self.headcc
+        elemento_actual = self.head
         contador = 1
 
         while elemento_actual:
             print(f"{contador}. {elemento_actual.data}")
             elemento_actual = elemento_actual.next
             contador += 1
+
+    def obtener_ids(self):
+
+        elemento_actual = self.head
+
+        ids = []
+
+        while elemento_actual:
+
+            ids.append(elemento_actual.data.id)
+
+            elemento_actual = elemento_actual.next
+
+        return ids
