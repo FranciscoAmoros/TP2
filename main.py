@@ -234,7 +234,21 @@ def ordenarPc():
         return
 
 
+def buscarPokemonEquipo():
 
+    pokemon = input("ingrese el nombre del pokemon a buscar: ").strip().lower()
+
+
+    esta = False
+
+    for p in equipo:
+        if p.nombre.strip().lower() == pokemon:
+            esta = True
+
+    if esta:
+        print(f"el pokemon {pokemon} está en el equipo principal.")
+    else:
+        print(f"el pokemon {pokemon} no está en el equipo principal.")
 
 
 def main():
@@ -295,6 +309,8 @@ def menu():
         capturarPokemon()
     elif opcion == 6:
         ordenarPc()
+    elif opcion == 7:
+        buscarPokemonEquipo()
     elif opcion == 9:
         transferirPokemon()
     elif opcion == 10:
