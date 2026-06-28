@@ -392,7 +392,8 @@ def menu():
     elif opcion == 7:
         buscarPokemonEquipo()
     elif opcion == 8:
-        buscarPokemonPokedex()
+        pass
+        #buscarPokemonPokedex()
     elif opcion == 10:
         transferirPokemon()
     elif opcion == 11:
