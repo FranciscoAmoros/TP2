@@ -58,19 +58,15 @@ class HashMap:
                     f"  ID: {key} | "
                     f"Nombre: {pokemon.nombre} | "
                     f"Tipo: {pokemon.tipo} | "
-                    f"CP: {pokemon.PC}"
+                    f"CP: {pokemon.pc}"
                 )
             
-    def obtenerPokemonRandom(self): # (si no hay pokemones precargados en la pokedex se queda el loop infinito)
+    def obtenerPokemonRandom(self):
 
-        done = False
-        while not done:
+        while True:
 
-            bucket = self.buckets[random.randint(0, 9)]
+            bucket = random.choice(self.buckets)
 
             if len(bucket) > 0:
-                pokemon = bucket[random.randint(0, len(bucket)-1)]
-                done = True
+                return random.choice(bucket)
 
-        return pokemon
-    

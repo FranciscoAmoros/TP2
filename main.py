@@ -21,13 +21,13 @@ def precargar():
 
     global base_de_datos, medallas
 
-    base_de_datos = hm.HashMap(15)
+    base_de_datos = hm.HashMap(20)
     medallas = hs.HashSet(8)
 
     with open("pokedex.json", "r", encoding="utf-8") as archivo:
         pokemones = json.load(archivo)
 
-    for i in range(15):
+    for i in range(20):
         done = False
         while not done:
 
@@ -72,7 +72,7 @@ def verEquipo():
     global equipo
 
     for pokemon in equipo:
-        print(pokemon.nombre, pokemon.tipo, pokemon.PC)
+        print(pokemon.nombre, pokemon.tipo, pokemon.pc)
 
 
 def verPokedex():
@@ -146,7 +146,7 @@ def capturarPokemon():
 
     salvaje = base_de_datos.obtenerPokemonRandom()[1]
 
-    print(f"  ¡Es un {salvaje.nombre}! ({salvaje.tipo}) | PC: {salvaje.PC}")
+    print(f"  ¡Es un {salvaje.nombre}! ({salvaje.tipo}) | PC: {salvaje.pc}")
     print()
 
     intentar = input("¿Querés intentar atraparlo? (s/n): ").strip().lower()
@@ -168,20 +168,26 @@ def capturarPokemon():
         print(f"\nYa tenés un {salvaje.nombre} en tu equipo o PC.")
         return
 
-    # 65% de probabilidad de captura
-    print("\nTirando la Pokeball...", end="", flush=True)
-    """
-    time.sleep(1)
-    print(" .", end="", flush=True)
-    time.sleep(0.6)
-    print(" .", end="", flush=True)
-    time.sleep(0.6)
-    print(" .")
-    time.sleep(0.6)
-    """
+    
+    if salvaje.pc < 300:
+        dificultad = 0.20
+    elif salvaje.pc < 550:
+        dificultad = 0.50
+    else:
+        dificultad = 0.75
 
-    if random.random() < 0.90:
-        nuevo = Pokemon(salvaje.id, salvaje.nombre, salvaje.tipo, salvaje.PC)
+    print("\nTirando la Pokeball", end="", flush=True)
+
+   # time.sleep(1)
+    print(" .", end="", flush=True)
+    #time.sleep(0.4)
+    print(" .", end="", flush=True)
+    #time.sleep(0.4)
+    print(" .")
+    #time.sleep(0.4)
+
+    if random.random() > 0.01:
+        nuevo = Pokemon(salvaje.id, salvaje.nombre, salvaje.tipo, salvaje.pc)
         if len(equipo) < 6:
             equipo.append(nuevo)
             print(f"\n¡Atrapaste a {nuevo.nombre}! Fue añadido al equipo ({len(equipo)}/6)")
@@ -190,6 +196,45 @@ def capturarPokemon():
             print(f"\n¡Atrapaste a {nuevo.nombre}! Equipo lleno, fue enviado a la PC")
     else:
         print(f"\n¡{salvaje.nombre} escapó! Más suerte la próxima.")
+
+
+def ordenarPc():
+
+    os.system("cls")
+
+    print("¿Cómo querés ordenar tu PC?\n")
+
+    print("1. Ordenamiento Alfabético")
+    print("2. Ordenamiento por Tipo")
+    print("3. Ordenamiento Competitivo")
+    print("4. Salir")
+
+    opcion_valida = False
+
+    while not opcion_valida:
+
+        try:
+            respuesta = int(input("\nRespuesta: "))
+        except ValueError:
+            print("solo se pueden ingresar numeros")
+        else:
+            if respuesta < 1 or respuesta > 4:
+                print("opción no válida")
+            else:
+                opcion_valida = True
+
+            
+    if respuesta == 1:
+        PC.ordenar_por_nombre()
+    elif respuesta == 2:
+        PC.ordenar_por_tipo()
+    elif respuesta == 3:
+        PC.ordenar_por_poder_combate()
+    elif respuesta == 4:
+        return
+
+
+
 
 
 def main():
@@ -210,7 +255,7 @@ def main():
 
 def menu():
 
-    #os.system("cls")
+    os.system("cls")
 
     print("1. Ver Pokédex")
     print("2. Ver Equipo Principal")
@@ -248,6 +293,8 @@ def menu():
         verMedallas()
     elif opcion == 5:
         capturarPokemon()
+    elif opcion == 6:
+        ordenarPc()
     elif opcion == 9:
         transferirPokemon()
     elif opcion == 10:

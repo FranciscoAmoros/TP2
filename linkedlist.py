@@ -49,27 +49,7 @@ class LinkedList:
 
             elemento_actual = elemento_actual.next
     
-    def ordenar(self): # bubble sort
 
-        movio = True
-
-        while movio:
-
-            movio = False
-            actual = self.head
-
-            while actual and actual.next:
-
-                if actual.data > actual.next.data:
-
-                    actual.data, actual.next.data = (
-                        actual.next.data,
-                        actual.data
-                    )
-
-                    movio = True
-
-                actual = actual.next
 
     def delete(self, data):
 
@@ -143,48 +123,7 @@ class LinkedList:
         nuevo_elemento.next = elemento_actual.next
         elemento_actual.next = nuevo_elemento
 
-    def get_tail(self):
 
-        elemento_actual = self.head
-
-        if elemento_actual.next == None:
-            return elemento_actual
-        
-        while elemento_actual.next:
-            elemento_actual = elemento_actual.next
-
-        return elemento_actual
-
-    def reverse(self):
-
-        anterior = None
-        actual = self.head
-
-        while actual:
-
-            siguiente = actual.next
-
-            actual.next = anterior
-
-            anterior = actual
-            actual = siguiente
-
-        self.head = anterior
-
-    def has_cycle(self):
-
-        tortuga = self.head
-        liebre = self.head
-
-        while liebre and liebre.next:
-
-            tortuga = tortuga.next
-            liebre = liebre.next.next
-
-            if tortuga == liebre:
-                return True
-
-        return False
     
     def imprimir(self):
 
@@ -192,7 +131,7 @@ class LinkedList:
         contador = 1
 
         while elemento_actual:
-            print(f"{contador}. {elemento_actual.data}")
+            print(f"{contador}. {elemento_actual.data.nombre}")
             elemento_actual = elemento_actual.next
             contador += 1
 
@@ -209,3 +148,85 @@ class LinkedList:
             elemento_actual = elemento_actual.next
 
         return ids
+    
+    def ordenar_por_nombre(self):
+
+        lista = []
+        elemento_actual = self.head
+
+        while elemento_actual:
+            lista.append(elemento_actual.data)
+            elemento_actual = elemento_actual.next
+
+        n = len(lista)
+
+        for i in range(n):
+            for j in range(n - i - 1):
+                if lista[j].nombre > lista[j + 1].nombre:
+                    lista[j], lista[j + 1] = lista[j + 1], lista[j]
+
+        self.head = None
+
+        for pokemon in lista:
+            self.append(pokemon)
+
+    def ordenar_por_tipo(self):
+
+        lista = []
+        elemento_actual = self.head
+
+        while elemento_actual:
+            lista.append(elemento_actual.data)
+            elemento_actual = elemento_actual.next
+
+        n = len(lista)
+
+        for i in range(n):
+            minimo = i
+
+            for j in range(i + 1, n):
+                if lista[j].tipo < lista[minimo].tipo:
+                    minimo = j
+
+            lista[i], lista[minimo] = lista[minimo], lista[i]
+
+        self.head = None
+
+        for pokemon in lista:
+            self.append(pokemon)
+
+    def ordenar_por_poder_combate(self):
+
+        lista = []
+        elemento_actual = self.head
+
+        while elemento_actual:
+            lista.append(elemento_actual.data)
+            elemento_actual = elemento_actual.next
+
+        def quick_sort(lista):
+            if len(lista) <= 1:
+                return lista
+
+            pivote = lista[len(lista) // 2]
+
+            mayores = []
+            iguales = []
+            menores = []
+
+            for pokemon in lista:
+                if pokemon.pc > pivote.pc:
+                    mayores.append(pokemon)
+                elif pokemon.pc < pivote.pc:
+                    menores.append(pokemon)
+                else:
+                    iguales.append(pokemon)
+
+            return quick_sort(mayores) + iguales + quick_sort(menores)
+
+        lista = quick_sort(lista)
+
+        self.head = None
+
+        for pokemon in lista:
+            self.append(pokemon)
