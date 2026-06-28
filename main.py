@@ -6,6 +6,8 @@ from clasePokemon import Pokemon
 
 import profesoroak as profe
 
+from busquedabinaria import busquedaBinaria
+
 import json
 
 import os
@@ -14,8 +16,12 @@ import keyboard
 import random
 import time
 
+import unicodedata
+
 base_de_datos : hm.HashMap
 medallas : hs.HashSet
+
+lista_ids_pokedex = []
 
 def precargar():
 
@@ -232,29 +238,102 @@ def ordenarPc():
         PC.ordenar_por_poder_combate()
     elif respuesta == 4:
         return
+    
+
+def normalizar(texto):
+    texto = texto.lower().strip()      
+    texto = "".join(texto.split())     
+    texto = "".join(
+        c for c in unicodedata.normalize("NFD", texto)
+        if unicodedata.category(c) != "Mn"
+    )                             
+    return texto
 
 
 def buscarPokemonEquipo():
 
-    pokemon = input("ingrese el nombre del pokemon a buscar: ").strip().lower()
-
+    pokemon = normalizar(input("Ingrese el nombre del Pokémon a buscar: "))
 
     esta = False
 
     for p in equipo:
-        if p.nombre.strip().lower() == pokemon:
+        if normalizar(p.nombre) == pokemon:
             esta = True
+            break
 
     if esta:
-        print(f"el pokemon {pokemon} está en el equipo principal.")
+        print(f"El Pokémon {pokemon} está en el equipo principal.")
     else:
-        print(f"el pokemon {pokemon} no está en el equipo principal.")
+        print(f"El Pokémon {pokemon} no está en el equipo principal.")
 
+"""
+
+def armarListaIDs():
+
+    lista = []
+
+    for bucket in base_de_datos.buckets:
+        for pokemon in bucket:
+            lista.append(pokemon[0])
+
+    def quick_sort(lista):
+        if len(lista) <= 1:
+            return lista
+
+        pivote = lista[len(lista) // 2]
+
+        mayores = []
+        iguales = []
+        menores = []
+
+        for pokemon in lista:
+            if pokemon > pivote:
+                mayores.append(pokemon)
+            elif pokemon < pivote:
+                menores.append(pokemon)
+            else:
+                iguales.append(pokemon)
+
+        return quick_sort(menores) + iguales + quick_sort(mayores)
+    
+    lista = quick_sort(lista)
+
+    return lista
+
+def buscarPokemonPokedex():
+
+    global lista_ids_pokedex
+
+    input_valido = False
+
+    while not input_valido:
+
+        try:
+            id = int(input("ingrese el id del pokemón que querés buscar: "))
+        except ValueError:
+            print("solo se pueden ingresar numeros.")
+        else:
+            input_valido = True
+        
+    
+    resultado = busquedaBinaria(lista_ids_pokedex, id, 0, len(lista_ids_pokedex)-1)
+
+    if not resultado:
+        print("no se encontro ese pokemon en la pokédex.")
+    else:
+        pokemon = base_de_datos.buscar(id)
+        print(f"pokemón encontrado: {pokemon.nombre}")
+    
+"""
 
 def main():
 
+    global lista_ids_pokedex
+
     precargar()
     profe.main()
+
+    #lista_ids_pokedex = armarListaIDs()
 
     running = True
     on_menu = True
@@ -278,10 +357,11 @@ def menu():
     print("5. Capturar nuevo Pokémon")
     print("6. Ordenar PC")
     print("7. Buscar Pokémon en Equipo")
-    print("8. Enviar Pokémon al Centro Pokémon")
-    print("9. Transferir Pokémon al Profesor Oak")
-    print("10. Deshacer última transferencia")
-    print("11. Desafiar Líder de Gimnasio")
+    print("8. Buscar Pokémon en Pokédex")
+    print("9. Enviar Pokémon al Centro Pokémon")
+    print("10. Transferir Pokémon al Profesor Oak")
+    print("11. Deshacer última transferencia")
+    print("12. Desafiar Líder de Gimnasio")
 
     input_valido = False
 
@@ -311,9 +391,11 @@ def menu():
         ordenarPc()
     elif opcion == 7:
         buscarPokemonEquipo()
-    elif opcion == 9:
-        transferirPokemon()
+    elif opcion == 8:
+        buscarPokemonPokedex()
     elif opcion == 10:
+        transferirPokemon()
+    elif opcion == 11:
         deshacerTransferencia()
 
     print('\nPRESIONE LA TECLA "ESCAPE" PARA VOLVER AL MENÚ.\n')
