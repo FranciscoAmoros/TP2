@@ -22,7 +22,7 @@ import unicodedata
 base_de_datos : hm.HashMap
 medallas : hs.HashSet
 
-lista_ids_pokedex = []
+running = True
 
 def precargar():
 
@@ -267,39 +267,7 @@ def buscarPokemonEquipo():
     else:
         print(f"El Pokémon {pokemon} no está en el equipo principal.")
 
-"""
 
-def armarListaIDs():
-
-    lista = []
-
-    for bucket in base_de_datos.buckets:
-        for pokemon in bucket:
-            lista.append(pokemon[0])
-
-    def quick_sort(lista):
-        if len(lista) <= 1:
-            return lista
-
-        pivote = lista[len(lista) // 2]
-
-        mayores = []
-        iguales = []
-        menores = []
-
-        for pokemon in lista:
-            if pokemon > pivote:
-                mayores.append(pokemon)
-            elif pokemon < pivote:
-                menores.append(pokemon)
-            else:
-                iguales.append(pokemon)
-
-        return quick_sort(menores) + iguales + quick_sort(mayores)
-    
-    lista = quick_sort(lista)
-
-    return lista
 
 def buscarPokemonPokedex():
 
@@ -317,15 +285,14 @@ def buscarPokemonPokedex():
             input_valido = True
         
     
-    resultado = busquedaBinaria(lista_ids_pokedex, id, 0, len(lista_ids_pokedex)-1)
+    pokemon = base_de_datos.buscar(id)
 
-    if not resultado:
+    if not pokemon:
         print("no se encontro ese pokemon en la pokédex.")
     else:
-        pokemon = base_de_datos.buscar(id)
         print(f"pokemón encontrado: {pokemon.nombre}")
     
-"""
+
 
 def desafiarLider():
 
@@ -496,16 +463,23 @@ def desafiarLider():
         else:
             print("el líder ganó la batalla.")
 
+def salir():
+
+    global running
+
+    os.system("cls")
+    print("Hasta pronto!")
+    running = False
+    exit()
+
 def main():
 
-    global lista_ids_pokedex
+    global running
 
     precargar()
     profe.main()
     centropokemon.main(base_de_datos)
     
-
-    #lista_ids_pokedex = armarListaIDs()
 
     running = True
     on_menu = True
@@ -541,6 +515,8 @@ def menu():
     print("10. Transferir Pokémon al Profesor Oak")
     print("11. Deshacer última transferencia")
     print("12. Desafiar Líder de Gimnasio")
+    print("13. Armar equipo")
+    print("14. Salir")
 
     input_valido = False
 
@@ -551,7 +527,7 @@ def menu():
         except ValueError:
             print("solo se pueden inresar números.")
         else:
-            if not 0 < opcion < 13:
+            if not 0 < opcion < 14:
                 print("opción no válida.")
             else:
                 input_valido = True
@@ -571,8 +547,7 @@ def menu():
     elif opcion == 7:
         buscarPokemonEquipo()
     elif opcion == 8:
-        pass
-        #buscarPokemonPokedex()
+        buscarPokemonPokedex()
     elif opcion == 9:
         enviarPokemonCentro()
     elif opcion == 10:
@@ -581,6 +556,10 @@ def menu():
         deshacerTransferencia()
     elif opcion == 12:
         desafiarLider()
+    elif opcion == 13:
+        pass
+    elif opcion == 14:
+        salir()
 
     print('\nPRESIONE LA TECLA "ESCAPE" PARA VOLVER AL MENÚ.\n')
 
