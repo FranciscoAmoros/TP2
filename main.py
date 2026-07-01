@@ -527,7 +527,7 @@ def menu():
         except ValueError:
             print("solo se pueden inresar números.")
         else:
-            if not 0 < opcion < 14:
+            if not 0 < opcion < 15:
                 print("opción no válida.")
             else:
                 input_valido = True
