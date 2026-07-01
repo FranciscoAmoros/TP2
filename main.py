@@ -5,6 +5,7 @@ import hashSet as hs
 from clasePokemon import Pokemon
 
 import profesoroak as profe
+import centropokemon
 
 from busquedabinaria import busquedaBinaria
 
@@ -27,13 +28,13 @@ def precargar():
 
     global base_de_datos, medallas
 
-    base_de_datos = hm.HashMap(20)
+    base_de_datos = hm.HashMap(59)
     medallas = hs.HashSet(8)
 
     with open("pokedex.json", "r", encoding="utf-8") as archivo:
         pokemones = json.load(archivo)
 
-    for i in range(20):
+    for i in range(59):
         done = False
         while not done:
 
@@ -326,12 +327,183 @@ def buscarPokemonPokedex():
     
 """
 
+def desafiarLider():
+
+    global equipo, base_de_datos, medallas
+
+    os.system("cls")
+
+    if not len(equipo) == 6:
+        print(f"no se puede pelear porque no tenes el equipo completo ({len(equipo)}/6)")
+        return
+
+    print("1. Roca")
+    print("2. Cascada")
+    print("3. Trueno")
+    print("4. Arcoiris")
+    print("5. Alma")
+    print("6. Pantano")
+    print("7. Volcan")
+    print("8. Tierra")
+
+    opciones = {
+        1: "Roca",
+        2: "Cascada",
+        3: "Trueno",
+        4: "Arcoíris",
+        5: "Alma",
+        6: "Pantano",
+        7: "Volcán",
+        8: "Tierra"
+    
+    }
+
+    dificultades = {
+        1: 300,
+        2: 350,
+        3: 400,
+        4: 450,
+        5: 500,
+        6: 550,
+        7: 600,
+        8: 650
+    }
+
+    input_valido = False
+
+    while not input_valido:
+        try:
+            opcion = int(input("\ningrese opcion: "))
+
+        except ValueError:
+            print("solo se pueden ingresar numeros")
+        else:
+            if opcion < 1 or opcion > 8:
+                print("opcion no valida")
+            else:
+                input_valido = True
+
+    if medallas.buscar(opcion):
+
+        print("ya tienes esa medalla.")
+
+    else:
+
+
+        dificultad = dificultades[opcion]
+
+        os.system("cls")
+        print(f"PELEA CONTRA LIDER DE GIMNASIO DE {opciones[opcion].upper()}")
+
+
+        lider = []
+
+
+        while len(lider) < 6:
+
+
+            pokemon = base_de_datos.obtenerPokemonRandom()[1]
+
+
+            if abs(pokemon.pc - dificultad) <= 50 and pokemon not in lider:
+                lider.append(pokemon)
+                print(f"DEBUG 7 - agregado {pokemon.nombre}")
+
+
+        ronda = 1
+        equipo_copia = equipo.copy()
+
+        rondas_jugador = 0
+        rondas_lider = 0
+
+        nombre_medalla = opciones[opcion].upper()
+        indice_medalla = opcion
+
+
+        while not ronda == 6:
+
+            os.system("cls")
+            print(f"PELEA CONTRA LIDER DE GIMNASIO DE {nombre_medalla}")
+            print(f"RONDA {ronda}")
+            print("")
+
+            print("ELEGIR POKEMON")
+
+            for indice, p in enumerate(equipo_copia, start=1):
+                print(f"{indice}. {p.nombre} - {p.pc}")
+
+            input_valido = False
+
+            while not input_valido:
+                try:
+                    opcion = int(input("\ningrese opcion: "))
+
+                except ValueError:
+                    print("solo se pueden ingresar numeros")
+                else:
+                    if opcion < 1 or opcion > len(equipo_copia):
+                        print("opcion no valida")
+                    else:
+                        input_valido = True
+
+            pokemon_jugador = equipo_copia[opcion-1]
+            pokemon_lider = random.choice(lider)
+
+            print("\n")
+            print(f"POKEMON DEL JUGADOR: {pokemon_jugador.nombre} - {pokemon_jugador.pc}")
+            print(f"POKEMON DEL LIDER: {pokemon_lider.nombre} - {pokemon_lider.pc}")
+
+            print("\nProcesadondo pelea", end="", flush=True)
+
+            time.sleep(1)
+            print(" .", end="", flush=True)
+            time.sleep(0.4)
+            print(" .", end="", flush=True)
+            time.sleep(0.4)
+            print(" .")
+            time.sleep(3)
+
+            poder_jugador = pokemon_jugador.pc + random.randint(-50, 50)
+            poder_lider = pokemon_lider.pc + random.randint(-50, 50)
+
+            if poder_jugador >= poder_lider:
+                print(f"Ganó el jugador la ronda {ronda}")
+                lider.remove(pokemon_lider)
+                daño = (pokemon_lider.pc) / 10
+                pokemon_jugador.pc -= daño # desgaste
+                print("pokemon del lider eliminado")
+                print(f"pokemon del jugador - {daño} de pc")
+                rondas_jugador += 1
+            else:
+                print(f"Ganó el líder la ronda {ronda}")
+                equipo_copia.remove(pokemon_jugador)
+                daño = (pokemon_jugador.pc) / 10
+                pokemon_lider.pc -=  daño # desgaste
+                print("pokemon del jugador eliminado")
+                print(f"pokemon del lider - {daño} de pc")
+                rondas_lider += 1
+
+            time.sleep(2)
+
+            ronda += 1
+
+        os.system("cls")
+        print("BATALLA TERMINADA")
+        if rondas_jugador > rondas_lider:
+            print("el jugador ganó la batalla.")
+            print(f"medalla de {nombre_medalla} obtenida.")
+            medallas.agregar(indice_medalla)
+        else:
+            print("el líder ganó la batalla.")
+
 def main():
 
     global lista_ids_pokedex
 
     precargar()
     profe.main()
+    centropokemon.main(base_de_datos)
+    
 
     #lista_ids_pokedex = armarListaIDs()
 
@@ -345,6 +517,13 @@ def main():
         if keyboard.is_pressed("escape") and not on_menu:
             on_menu = True
             on_menu = menu()
+
+
+def enviarPokemonCentro():
+
+    global equipo
+
+    centropokemon.curar(equipo)
 
 def menu():
 
@@ -372,7 +551,7 @@ def menu():
         except ValueError:
             print("solo se pueden inresar números.")
         else:
-            if not 0 < opcion < 12:
+            if not 0 < opcion < 13:
                 print("opción no válida.")
             else:
                 input_valido = True
@@ -394,10 +573,14 @@ def menu():
     elif opcion == 8:
         pass
         #buscarPokemonPokedex()
+    elif opcion == 9:
+        enviarPokemonCentro()
     elif opcion == 10:
         transferirPokemon()
     elif opcion == 11:
         deshacerTransferencia()
+    elif opcion == 12:
+        desafiarLider()
 
     print('\nPRESIONE LA TECLA "ESCAPE" PARA VOLVER AL MENÚ.\n')
 

@@ -6,7 +6,6 @@ class Pokemon:
         self.nombre = nombre
         self.tipo = tipo
         self.pc = pc
-
         
 
         
