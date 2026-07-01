@@ -1,0 +1,18 @@
+1.
+
+Ingresar un nuevo pokemon en la lista del equipo tiene el costo de una sola operacion
+ya que es tan solo poner el pokemon en la siguiente posicion libre, y agregar un elemento
+al PC al principio tambien, ya que solo hay que cambiar el nodo head y el puntero de este.
+
+2.
+
+Porque buscar en un hashmap es mucho mas rapido, ya que python usa la funcion hash y
+automaticamente encontras la posicion del pokemon en memoria, mientras que en un array,
+para hacerlo asi de eficiente, tenes que saber si o si el indice donde se ubica.
+
+3.
+
+En el caso promedio, seria mucho mas rapido quick sort, ya que bubble sort tiene una complejidad
+de O(n2) y quick sort tiene una de O(n log n), mientras que en el peor caso de quick sort, es
+igual a bubble sort O(n2), pero tendria que pasar que el pivote que se elija sea muy malo, como
+por ejemplo el elemento mas grande o el mas chico, que es poco probable.
