@@ -23,13 +23,11 @@ class LinkedList:
             elemento_actual = elemento_actual.next
 
         elemento_actual.next = nuevo_elemento
-    
-    def find(self, data):
 
-        """
-
+    def find_by_index(self, indice):
+        
         if indice == 0:
-            return self.head
+            return self.head.data
         
         elemento = self.head
         
@@ -37,8 +35,9 @@ class LinkedList:
             if elemento.next:
                 elemento = elemento.next
 
-        return elemento
-        """
+        return elemento.data
+    
+    def find(self, data):
 
         elemento_actual = self.head
 
@@ -70,13 +69,6 @@ class LinkedList:
 
             elemento_actual = elemento_actual.next
 
-    def imprimir(self):
-
-        elemento_actual = self.head
-
-        while elemento_actual:
-            print(elemento_actual.data)
-            elemento_actual = elemento_actual.next
 
     def size(self):
 
@@ -131,7 +123,7 @@ class LinkedList:
         contador = 1
 
         while elemento_actual:
-            print(f"{contador}. {elemento_actual.data.nombre}")
+            print(f"{contador}. {elemento_actual.data.nombre} | {elemento_actual.data.tipo} | {elemento_actual.data.pc}")
             elemento_actual = elemento_actual.next
             contador += 1
 

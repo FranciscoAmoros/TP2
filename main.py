@@ -70,6 +70,10 @@ def verPC():
 
     os.system("cls")
 
+    if PC.size() == 0:
+        print("no tenes ningún pokemón en la PC.")
+        return
+
     PC.imprimir()
 
 def verEquipo():
@@ -78,8 +82,12 @@ def verEquipo():
 
     global equipo
 
-    for pokemon in equipo:
-        print(pokemon.nombre, pokemon.tipo, pokemon.pc)
+    if not equipo:
+        print("no tenes ningún pokemón en el equipo.")
+        return
+
+    for indice, pokemon in enumerate(equipo):
+        print(f"{indice+1}. {pokemon.nombre} | {pokemon.tipo} | {pokemon.pc}")
 
 
 def verPokedex():
@@ -148,7 +156,7 @@ def capturarPokemon():
     global equipo, PC
 
     print()
-    print("¡Un Pokemon salvaje apareció!")
+    print("¡Un Pokemón salvaje apareció!")
     print()
 
     salvaje = base_de_datos.obtenerPokemonRandom()[1]
@@ -179,21 +187,23 @@ def capturarPokemon():
     if salvaje.pc < 300:
         dificultad = 0.20
     elif salvaje.pc < 550:
-        dificultad = 0.50
+        dificultad = 0.45
     else:
-        dificultad = 0.75
+        dificultad = 0.60
 
     print("\nTirando la Pokeball", end="", flush=True)
 
-   # time.sleep(1)
+    """
+    time.sleep(1)
     print(" .", end="", flush=True)
-    #time.sleep(0.4)
+    time.sleep(0.4)
     print(" .", end="", flush=True)
-    #time.sleep(0.4)
+    time.sleep(0.4)
     print(" .")
-    #time.sleep(0.4)
+    time.sleep(0.4)
+    """
 
-    if random.random() > 0.01:
+    if random.random() > 0.01:#dificultad:
         nuevo = Pokemon(salvaje.id, salvaje.nombre, salvaje.tipo, salvaje.pc)
         if len(equipo) < 6:
             equipo.append(nuevo)
@@ -253,23 +263,29 @@ def normalizar(texto):
 
 def buscarPokemonEquipo():
 
-    pokemon = normalizar(input("Ingrese el nombre del Pokémon a buscar: "))
+    os.system("cls")
+
+    pokemon_ingresado = normalizar(input("Ingrese el nombre del Pokémon a buscar: "))
 
     esta = False
 
+
     for p in equipo:
-        if normalizar(p.nombre) == pokemon:
+        if normalizar(p.nombre) == pokemon_ingresado:
             esta = True
+            pokemon = p
             break
 
     if esta:
-        print(f"El Pokémon {pokemon} está en el equipo principal.")
+        print(f"Pokemón encontrado en el equipo: {pokemon.nombre} | {pokemon.tipo} | {pokemon.pc}")
     else:
-        print(f"El Pokémon {pokemon} no está en el equipo principal.")
+        print(f"El Pokémon {pokemon_ingresado} no está en el equipo principal.")
 
 
 
 def buscarPokemonPokedex():
+
+    os.system("cls")
 
     global lista_ids_pokedex
 
@@ -290,7 +306,7 @@ def buscarPokemonPokedex():
     if not pokemon:
         print("no se encontro ese pokemon en la pokédex.")
     else:
-        print(f"pokemón encontrado: {pokemon.nombre}")
+        print(f"pokemón encontrado: {pokemon.nombre} | {pokemon.tipo} | {pokemon.pc}")
     
 
 
@@ -374,7 +390,6 @@ def desafiarLider():
 
             if abs(pokemon.pc - dificultad) <= 50 and pokemon not in lider:
                 lider.append(pokemon)
-                print(f"DEBUG 7 - agregado {pokemon.nombre}")
 
 
         ronda = 1
@@ -438,16 +453,16 @@ def desafiarLider():
                 lider.remove(pokemon_lider)
                 daño = (pokemon_lider.pc) / 10
                 pokemon_jugador.pc -= daño # desgaste
-                print("pokemon del lider eliminado")
-                print(f"pokemon del jugador - {daño} de pc")
+                print("pokemón del líder eliminado")
+                print(f"pokemón del jugador - {daño} de pc")
                 rondas_jugador += 1
             else:
                 print(f"Ganó el líder la ronda {ronda}")
                 equipo_copia.remove(pokemon_jugador)
                 daño = (pokemon_jugador.pc) / 10
                 pokemon_lider.pc -=  daño # desgaste
-                print("pokemon del jugador eliminado")
-                print(f"pokemon del lider - {daño} de pc")
+                print("pokemón del jugador eliminado")
+                print(f"pokemón del líder - {daño} de pc")
                 rondas_lider += 1
 
             time.sleep(2)
@@ -462,6 +477,80 @@ def desafiarLider():
             medallas.agregar(indice_medalla)
         else:
             print("el líder ganó la batalla.")
+
+
+def armarEquipo():
+
+    if PC.size() == 0:
+        os.system("cls")
+        print("No hay pokemones suficientes para cambiar.")
+        return
+
+    equipo_nuevo = []
+    indices_usados = []
+    mensaje = ""
+
+    while len(equipo_nuevo) < 6:
+
+        os.system("cls")
+
+        print("----- POKEMONES DE LA PC -----\n")
+        for indice in range(PC.size()):
+            p = PC.find_by_index(indice)
+            print(f"{indice} | {p.nombre} | {p.tipo} | {p.pc}")
+
+        print("\n----- POKEMONES DEL EQUIPO ACTUAL -----\n")
+        for indice, pokemon in enumerate(equipo):
+            print(f"{PC.size()+indice} | {pokemon.nombre} | {pokemon.tipo} | {pokemon.pc}")
+
+        if equipo_nuevo:
+            print("\n----- YA ELEGISTE -----\n")
+            for pokemon in equipo_nuevo:
+                print(f"- {pokemon.nombre} | {pokemon.tipo} | {pokemon.pc}")
+
+        if mensaje:
+            print(f"\n{mensaje}")
+
+        total_disponibles = PC.size() + len(equipo)
+
+        try:
+            indice = int(input(f"\nElegí el pokémon #{len(equipo_nuevo)+1} para tu equipo (índice): "))
+        except ValueError:
+            mensaje = "Ingresá un número válido."
+            continue
+
+        if indice < 0 or indice >= total_disponibles:
+            mensaje = "Ese índice no existe. Intentá de nuevo."
+            continue
+
+        if indice in indices_usados:
+            mensaje = "Ese pokémon ya fue elegido. Elegí otro."
+            continue
+
+        if indice < PC.size():
+            pokemon_elegido = PC.find_by_index(indice)
+        else:
+            pokemon_elegido = equipo[indice - PC.size()]
+
+        equipo_nuevo.append(pokemon_elegido)
+        indices_usados.append(indice)
+        mensaje = f"{pokemon_elegido.nombre} agregado al equipo nuevo."
+
+    for pokemon in equipo:
+        if pokemon not in equipo_nuevo:
+            PC.append(pokemon)
+
+    for pokemon in equipo_nuevo:
+        if pokemon not in equipo:
+            PC.delete(pokemon)
+
+    equipo[:] = equipo_nuevo
+
+    os.system("cls")
+    print("¡Equipo armado con éxito!\n")
+    for pokemon in equipo:
+        print(f"- {pokemon.nombre} | {pokemon.tipo} | {pokemon.pc}")
+
 
 def salir():
 
@@ -499,7 +588,8 @@ def enviarPokemonCentro():
 
     centropokemon.curar(equipo)
 
-def menu():
+
+def mostrar_opciones():
 
     os.system("cls")
 
@@ -518,17 +608,22 @@ def menu():
     print("13. Armar equipo")
     print("14. Salir")
 
+def menu():
+
     input_valido = False
 
     while not input_valido:
 
+        mostrar_opciones()
+
         try:
             opcion = int(input("\nINGRESE OPCIÓN: \n"))
         except ValueError:
-            print("solo se pueden inresar números.")
+            continue
         else:
+
             if not 0 < opcion < 15:
-                print("opción no válida.")
+                continue
             else:
                 input_valido = True
 
@@ -557,7 +652,7 @@ def menu():
     elif opcion == 12:
         desafiarLider()
     elif opcion == 13:
-        pass
+        armarEquipo()
     elif opcion == 14:
         salir()
 
