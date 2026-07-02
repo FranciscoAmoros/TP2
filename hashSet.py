@@ -40,5 +40,5 @@ class HashSet:
 
         for medalla in medallas_json:
             if self.buscar(medalla["id"]):
-                print(f"{medalla["nombre"]}")
+                print(f"{medalla['nombre']}")
 

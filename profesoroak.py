@@ -4,8 +4,8 @@ class Stack:
     
     def push(self, element):
         self.stack.append(element)
-        if self.size() == 6:
-            self.stack.remove(stack.peek())
+        if self.size() > 6:
+            self.stack.pop(0)
     
     def pop(self):
         if self.isEmpty():

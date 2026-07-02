@@ -7,7 +7,6 @@ from clasePokemon import Pokemon
 import profesoroak as profe
 import centropokemon
 
-from busquedabinaria import busquedaBinaria
 
 import json
 
@@ -287,7 +286,6 @@ def buscarPokemonPokedex():
 
     os.system("cls")
 
-    global lista_ids_pokedex
 
     input_valido = False
 
@@ -402,7 +400,7 @@ def desafiarLider():
         indice_medalla = opcion
 
 
-        while not ronda == 6:
+        while ronda <= 6:
 
             os.system("cls")
             print(f"PELEA CONTRA LIDER DE GIMNASIO DE {nombre_medalla}")
